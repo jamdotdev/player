@@ -48,13 +48,18 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 });
 
-// Mock HTMLMediaElement methods
-const mediaElementMethods = ['play', 'pause', 'load'] as const;
-mediaElementMethods.forEach((method) => {
-  HTMLMediaElement.prototype[method] = function () {
-    return Promise.resolve();
-  } as () => Promise<void>;
-});
+// Mock HTMLMediaElement methods with proper type signatures
+HTMLMediaElement.prototype.play = function (): Promise<void> {
+  return Promise.resolve();
+};
+
+HTMLMediaElement.prototype.pause = function (): void {
+  // No-op for tests
+};
+
+HTMLMediaElement.prototype.load = function (): void {
+  // No-op for tests
+};
 
 // Mock fullscreen API
 Object.defineProperty(document, 'fullscreenEnabled', {

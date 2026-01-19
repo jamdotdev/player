@@ -93,31 +93,14 @@ export function createMockMediaElement(): HTMLVideoElement {
 
 /**
  * A simple mock MediaPlayer component for testing context consumers.
+ * Note: This is a placeholder for future use. For actual tests, use the real MediaPlayer
+ * component which properly initializes the Maverick.js context.
  */
 export interface MockMediaPlayerProps {
   children: React.ReactNode;
-  initialState?: Partial<{
-    paused: boolean;
-    playing: boolean;
-    currentTime: number;
-    duration: number;
-    volume: number;
-    muted: boolean;
-    canPlay: boolean;
-    canFullscreen: boolean;
-    fullscreen: boolean;
-    waiting: boolean;
-    seeking: boolean;
-    ended: boolean;
-    error: Error | null;
-  }>;
 }
 
-export function MockMediaPlayer({
-  children,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  initialState,
-}: MockMediaPlayerProps): React.ReactElement {
+export function MockMediaPlayer({ children }: MockMediaPlayerProps): React.ReactElement {
   // This is a placeholder - in actual tests we'll use the real MediaPlayer
   // or create more sophisticated mocks as needed
   return React.createElement('div', { 'data-testid': 'mock-media-player' }, children);
