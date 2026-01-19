@@ -945,7 +945,7 @@ export class MediaStateManager extends MediaPlayerController {
     }
 
     if (!live()) {
-      if (Math.floor(currentTime()) !== Math.floor(seekableEnd())) {
+      if (Math.abs(currentTime() - seekableEnd()) > 0.1) {
         ended.set(false);
       } else {
         this.end(event);

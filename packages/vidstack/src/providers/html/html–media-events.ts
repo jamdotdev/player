@@ -283,23 +283,6 @@ export class HTMLMediaEvents {
     this.#updateCurrentTime(this.#media.currentTime, event);
 
     this.#ctx.notify('seeked', this.#media.currentTime, event);
-
-    // HLS: If precision has increased by seeking to the end, we'll call `play()` to properly end.
-    if (
-      Math.trunc(this.#media.currentTime) === Math.trunc(this.#media.duration) &&
-      getNumberOfDecimalPlaces(this.#media.duration) >
-        getNumberOfDecimalPlaces(this.#media.currentTime)
-    ) {
-      this.#updateCurrentTime(this.#media.duration, event);
-
-      if (!this.#media.ended) {
-        this.#ctx.player.dispatch(
-          new DOMEvent<void>('media-play-request', {
-            trigger: event,
-          }),
-        );
-      }
-    }
   }
 
   #onSeeking(event: Event) {

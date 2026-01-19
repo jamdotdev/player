@@ -760,7 +760,10 @@ export class MediaRequestManager extends MediaPlayerController implements MediaR
     const { canSeek, ended, live, seekableEnd, userBehindLiveEdge } = this.$state,
       seekTime = event.detail;
 
-    if (ended()) this.#request.replaying = true;
+    if (ended()) {
+      this.#request.replaying = true;
+      this.$state.ended.set(false);
+    }
 
     const key = event.type as 'media-seek-request';
 
