@@ -3,9 +3,11 @@
   "compilerOptions": {
     "jsx": "preserve",
     "paths": {
-      "@vidstack/react": ["./src/index.ts"]
+      "@vidstack/react": ["./src/index.ts"],
+      "$test-utils": ["./src/test-utils/index.ts"],
+      "$test-utils/*": ["./src/test-utils/*"]
     },
-    "types": ["@types/node"]
+    "types": ["@types/node", "vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "sandbox"]
 }
