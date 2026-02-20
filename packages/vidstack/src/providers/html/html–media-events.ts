@@ -139,7 +139,9 @@ export class HTMLMediaEvents {
 
   #updateCurrentTime(time: number, trigger?: Event) {
     // Avoid errors where `currentTime` can have higher precision.
-    const newTime = Math.min(time, this.#ctx.$state.seekableEnd());
+    const seekableEnd = this.#ctx.$state.seekableEnd(),
+      hasUsableSeekableEnd = Number.isFinite(seekableEnd) && seekableEnd > 0,
+      newTime = hasUsableSeekableEnd ? Math.min(time, seekableEnd) : time;
     this.#ctx.notify('time-change', newTime, trigger);
   }
 
