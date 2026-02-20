@@ -920,9 +920,9 @@ export interface MediaPlayerQuery {
 }
 
 export function boundTime(time: number, store: MediaStore) {
-  const clippedTime = time + store.clipStartTime(),
-    start = store.seekableStart(),
-    end = store.seekableEnd();
+  const clippedTime = time + store.clipStartTime();
+  const start = store.seekableStart();
+  const end = store.seekableEnd();
 
   if (Number.isFinite(end) && end <= start) {
     return start;
