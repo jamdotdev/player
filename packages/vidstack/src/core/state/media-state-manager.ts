@@ -579,8 +579,15 @@ export class MediaStateManager extends MediaPlayerController {
     seekable.set(detail.seekable);
 
     // Do not fetch `seekableEnd` from `$state` as it might be clipped.
-    const seekableEnd = getTimeRangesEnd(detail.seekable) ?? Infinity;
-    intrinsicDuration.set(seekableEnd);
+    const seekableEnd = getTimeRangesEnd(detail.seekable),
+      resolvedDuration =
+        seekableEnd != null && seekableEnd > 0
+          ? seekableEnd
+          : detail.duration > 0
+            ? detail.duration
+            : (seekableEnd ?? Infinity);
+
+    intrinsicDuration.set(resolvedDuration);
   }
 
   ['duration-change'](event: ME.MediaDurationChangeEvent) {

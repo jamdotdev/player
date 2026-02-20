@@ -142,12 +142,16 @@ export const mediaState = new State<MediaState>({
   get seekableEnd() {
     if (this.providedDuration > 0) return this.providedDuration;
 
+    const seekableEnd = getTimeRangesEnd(this.seekable),
+      resolvedSeekableEnd =
+        seekableEnd != null && seekableEnd > 0
+          ? seekableEnd
+          : this.intrinsicDuration > 0
+            ? this.intrinsicDuration
+            : Infinity;
+
     const end =
-      this.liveSyncPosition > 0
-        ? this.liveSyncPosition
-        : this.canPlay
-          ? (getTimeRangesEnd(this.seekable) ?? Infinity)
-          : 0;
+      this.liveSyncPosition > 0 ? this.liveSyncPosition : this.canPlay ? resolvedSeekableEnd : 0;
 
     return this.clipEndTime > 0 ? Math.min(this.clipEndTime, end) : end;
   },
@@ -916,25 +920,28 @@ export interface MediaPlayerQuery {
 }
 
 export function boundTime(time: number, store: MediaStore) {
-  const clippedTime = time + store.clipStartTime();
-  const isStart = Math.abs(time - store.seekableStart()) <= 0.01;
-  const isEnd = Math.abs(clippedTime - store.seekableEnd()) < 0.1;
+  const clippedTime = time + store.clipStartTime(),
+    start = store.seekableStart(),
+    end = store.seekableEnd();
+
+  if (Number.isFinite(end) && end <= start) {
+    return start;
+  }
+
+  const isStart = Math.abs(time - start) <= 0.01;
+  const isEnd = Math.abs(clippedTime - end) < 0.1;
 
   if (isStart) {
-    return store.seekableStart();
+    return start;
   }
 
   if (isEnd) {
-    return store.seekableEnd();
+    return end;
   }
 
-  if (
-    store.isLiveDVR() &&
-    store.liveDVRWindow() > 0 &&
-    clippedTime < store.seekableEnd() - store.liveDVRWindow()
-  ) {
+  if (store.isLiveDVR() && store.liveDVRWindow() > 0 && clippedTime < end - store.liveDVRWindow()) {
     return store.bufferedStart();
   }
 
-  return Math.min(Math.max(store.seekableStart() + 0.1, clippedTime), store.seekableEnd() - 0.1);
+  return Math.min(Math.max(start + 0.1, clippedTime), end - 0.1);
 }
