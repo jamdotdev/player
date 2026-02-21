@@ -57,14 +57,14 @@ describe(boundTime.name, () => {
     } as any;
   }
 
-  it('returns seekable start when seek window is collapsed', () => {
+  it('attempts requested seek time when seek window is collapsed', () => {
     const store = createStore({ seekableStart: 0, seekableEnd: 0 });
-    expect(boundTime(25, store)).to.equal(0);
+    expect(boundTime(25, store)).to.equal(25);
   });
 
   it('avoids invalid negative seek time when seek window is collapsed at 0', () => {
     const store = createStore({ seekableStart: 0, seekableEnd: 0 });
-    expect(boundTime(1, store)).to.equal(0);
+    expect(boundTime(1, store)).to.equal(1);
   });
 
   it('keeps existing clamping behavior for normal seek windows', () => {

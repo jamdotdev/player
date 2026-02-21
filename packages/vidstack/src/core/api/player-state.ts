@@ -924,8 +924,10 @@ export function boundTime(time: number, store: MediaStore) {
   const start = store.seekableStart();
   const end = store.seekableEnd();
 
+  // Some WebM streams initially report a collapsed seek window (`0..0`).
+  // In this case we should still attempt the requested seek just like initial restored playback.
   if (Number.isFinite(end) && end <= start) {
-    return start;
+    return Math.max(start, clippedTime);
   }
 
   const isStart = Math.abs(time - start) <= 0.01;
